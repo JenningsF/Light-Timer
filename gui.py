@@ -53,4 +53,49 @@ End_Year.insert(END, Start_Year.get())
 
 Button(master, text = "Submit", command = get_dates).grid(row = 13, column = 0, columnspan = 3)
 
+#Creating the checkButtons for Music play hours
+
+Label(master, text="AM - Music - Hours").grid(row = 0, column = 7, columnspan = 8)
+for i in range(0, 12):
+        var = IntVar()
+        c = Checkbutton(master, text="", variable=var)
+        c.grid(row = 3, column = i+5)
+        if i == 0:
+                Label(master, justify = CENTER, text=str(12)).grid(row = 2, column = i+5)
+        else:
+                Label(master, justify = CENTER, text=str(i)).grid(row = 2, column = i+5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 master.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
