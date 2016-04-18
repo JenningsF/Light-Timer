@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 from tkinter import *
+#from Pillow import *
+from PIL import Image, ImageTk
 
 def get_dates():
 	date1 = Start_Month.get()
@@ -8,7 +10,7 @@ def get_dates():
 
 #Setting up Window
 master = Tk()
-master.geometry("460x320")
+master.geometry("480x320")
 
 Label(master, justify = CENTER, text="Start Date").grid(row = 0, column = 0, columnspan = 3)
 
@@ -58,7 +60,7 @@ Button(master, text = "Submit", command = get_dates).grid(row = 13, column = 0, 
 Label(master, text="AM - Music - Hours").grid(row = 0, column = 7, columnspan = 8)
 for i in range(0, 12):
         var = IntVar()
-        c = Checkbutton(master, text="", variable=var)
+        c = Checkbutton(master, text="", variable=var )
         c.grid(row = 3, column = i+5)
         if i == 0:
                 Label(master, justify = CENTER, text=str(12)).grid(row = 2, column = i+5)
@@ -67,17 +69,29 @@ for i in range(0, 12):
 
 
 
+#Creating the buttons that increment date
+cursor = 0
+def press_up(event):
+        print("pressed up")
 
+#Button(master, text="", command=increment(spot)).grid(row = 11, column = 7, columnspan = 9)
 
+photo_up = PhotoImage(file = "images/up.gif")
+up = Button(master, image = photo_up, )#command = increment(spot))
+up.grid(row = 8, column = 9, columnspan = 5, rowspan = 5)
+up.bind("<Button-1>", press_up)
 
+photo_right = PhotoImage(file = "images/right.gif")
+right = Button(master, image = photo_right, )#command = increment(spot))
+right.grid(row = 11, column = 6, columnspan = 5, rowspan = 5)
 
+photo_left = PhotoImage(file = "images/left.gif")
+left = Button(master, image = photo_left, )#command = increment(spot))
+left.grid(row = 11, column = 12, columnspan = 5, rowspan = 5)
 
-
-
-
-
-
-
+photo_down = PhotoImage(file = "images/down.gif")
+down = Button(master, image = photo_down, )#command = increment(spot))
+down.grid(row = 13, column = 9, columnspan = 5, rowspan = 5)
 
 master.mainloop()
 
