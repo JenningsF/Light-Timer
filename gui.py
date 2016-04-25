@@ -4,19 +4,26 @@ from tkinter import *
 import _thread
 import time
 from PIL import Image, ImageTk
+from datetime import date
+from datetime import timedelta
 
+timeDiff = date.today()
 
-def get_dates():
+def submit():
 	sDay = Start_Day.get()
 	sMonth = Start_Month.get()
 	sYear = Start_Year.get()
 	eDay = End_Day.get()
 	eMonth = End_Month.get()
 	eYear = End_Year.get()
-	
-	print ("Starting Date: " + str(sDay) + '/' + str(sMonth) + '/' + str(sYear) )
-	print ("Ending Date : " + str(eDay) + '/' + str(eMonth) + '/' + str(eYear) )
-	print ("")
+	InitialDate = date(int(sYear), int(sMonth), int(sDay) )
+	FinalDate = date(int(eYear), int(eMonth), int(eDay))
+	print ("Starting Date:"),
+	print (InitialDate)
+	print ("Ending Date:")
+	print (FinalDate)
+	timeDiff = FinalDate - InitialDate
+	print (timeDiff)
 
 def press_up1(event):
 	num = Start_Day.get()
@@ -96,8 +103,6 @@ def press_minus5(event):
 	print("Num: " + str( End_Month.get() ) )
 	print("Pressed Minus5")
 
-
-
 	
 def press_up6(event):
 	num = End_Year.get()
@@ -115,39 +120,47 @@ def press_minus6(event):
 
 
 def CheckValid( threadName, delay):
-        while 1:
-                if int( Start_Day.get() ) > 31 or int (Start_Day.get()) <0:
-                        Start_Day.delete(0, END)
-                        Start_Day.insert(END, 15)
-                        print ("You entered an invalid date")
-                if int( End_Day.get() ) > 31 or int (End_Day.get()) <0:
-                        End_Day.delete(0, END)
-                        End_Day.insert(END, 25)
-                        print ("You entered an invalid date")
+	while 1:
+		if int( Start_Day.get() ) > 31 or int (Start_Day.get()) <0:
+			Start_Day.delete(0, END)
+			Start_Day.insert(END, 15)
+			print ("You entered an invalid date")
+		if int( End_Day.get() ) > 31 or int (End_Day.get()) <0:
+			End_Day.delete(0, END)
+			End_Day.insert(END, 25)
+			print ("You entered an invalid date")
 
-                        
-                if int (Start_Month.get()) > 12 or int (Start_Month.get()) < 0:
-                        Start_Month.delete(0, END)
-                        Start_Month.insert(END, 5)
-                        print ("You entered an invalid date")
-                if int (End_Month.get()) > 12 or int (End_Month.get()) < 0:
-                        End_Month.delete(0, END)
-                        End_Month.insert(END, 12)
-                        print ("You entered an invalid date")
+			
+		if int (Start_Month.get()) > 12 or int (Start_Month.get()) < 0:
+			Start_Month.delete(0, END)
+			Start_Month.insert(END, 5)
+			print ("You entered an invalid date")
+		if int (End_Month.get()) > 12 or int (End_Month.get()) < 0:
+			End_Month.delete(0, END)
+			End_Month.insert(END, 12)
+			print ("You entered an invalid date")
 
 
-                if int (Start_Year.get()) > 2050 or int (Start_Year.get()) < 2016:
-                        Start_Year.delete(0, END)
-                        Start_Year.insert(END, 2016)
-                        print ("You entered an invalid date")
-                if int (End_Year.get()) > 2050 or int (End_Year.get()) < 2016:
-                        End_Year.delete(0, END)
-                        End_Year.insert(END, 2016)
-                        print ("You entered an invalid date")
-                 
-                time.sleep(0.5)
-                
+		if int (Start_Year.get()) > 2050 or int (Start_Year.get()) < 2016:
+			Start_Year.delete(0, END)
+			Start_Year.insert(END, 2016)
+			print ("You entered an invalid date")
+		if int (End_Year.get()) > 2050 or int (End_Year.get()) < 2016:
+			End_Year.delete(0, END)
+			End_Year.insert(END, 2016)
+			print ("You entered an invalid date")
+		 
+		time.sleep(0.5)
 
+
+def RunCountdown(threadName, delay):
+	OneSec = timedelta(days=0, hours=0, minutes=0, seconds=1, microseconds=0)
+	while True:
+		CountDownTime = timeDiff - OneSec
+		print (CountDownTime.strftime("%Y-%m-%d %H:%M:%S"))
+		time.sleep(1)
+
+	
 
 #Setting up Window
 master = Tk()
@@ -161,12 +174,15 @@ Label(master, justify = CENTER, text="Month").grid(row = 2, column = 3)
 Label(master, justify = CENTER, text="Year").grid(row = 2, column = 6)
 
 
+#Initializing the dates 
+today = date.today()
+EndingDay = date(today.year, 12, 25)
 
 #Creating Text Boxes and buttons
 
 Start_Day = Entry(master, font = (12), width = (4))
 Start_Day.grid(row = 3, column = 0, rowspan = 2 )
-Start_Day.insert(END, 28)
+Start_Day.insert(END, today.day)
 
 photo_up1 = PhotoImage(file = "images/plus.gif")
 up1 = Button(master, image = photo_up1, )#command = increment(spot))
@@ -183,7 +199,7 @@ minus1.bind("<Button-1>", press_minus1)
 
 Start_Month = Entry(master, font = (12), width = (4)  )
 Start_Month.grid(row = 3, column = 3, rowspan = 2)
-Start_Month.insert(END, 5)
+Start_Month.insert(END, today.month)
 
 photo_up2 = PhotoImage(file = "images/plus.gif")
 up2 = Button(master, image = photo_up2, )#command = increment(spot))
@@ -199,7 +215,7 @@ minus2.bind("<Button-1>", press_minus2)
 
 Start_Year = Entry(master, font = (12), width = (4))
 Start_Year.grid(row = 3, column = 6, rowspan=2)
-Start_Year.insert(END, 2016)
+Start_Year.insert(END, today.year)
 
 photo_up3 = PhotoImage(file = "images/plus.gif")
 up3 = Button(master, image = photo_up3, )#command = increment(spot))
@@ -226,7 +242,7 @@ minus3.bind("<Button-1>", press_minus3)
 
 End_Day = Entry(master, font = (12), width = (4))
 End_Day.grid(row = 6, column = 0, rowspan = 2)
-End_Day.insert(END, 25)
+End_Day.insert(END, EndingDay.day)
 
 photo_up4 = PhotoImage(file = "images/plus.gif")
 up4 = Button(master, image = photo_up4, )#command = increment(spot))
@@ -241,7 +257,7 @@ minus4.bind("<Button-1>", press_minus4)
 
 
 End_Month = Entry(master, font = (12), width = (4))
-End_Month.insert(END, 12)
+End_Month.insert(END, EndingDay.month)
 End_Month.grid(row = 6, column = 3, rowspan = 2)
 
 photo_up5 = PhotoImage(file = "images/plus.gif")
@@ -272,12 +288,12 @@ minus6.grid(row = 7, column = 7, columnspan = 2)
 minus6.bind("<Button-1>", press_minus6)
 
 
+Label(master, text="Days Remaining").grid(row = 2, column = 8, columnspan = 8)
 
-Button(master, text = "Submit", command = get_dates).grid(row = 13, column = 0, columnspan = 3)
+
+Button(master, text = "Submit", command = submit).grid(row = 13, column = 0, columnspan = 3)
 
 #Creating the checkButtons for Music play hours
-
-Label(master, text="AM - Music - Hours").grid(row = 8, column = 7, columnspan = 8)
 for i in range(0, 12):
 	var = IntVar()
 	c = Checkbutton(master, text="", variable=var )
@@ -294,6 +310,7 @@ for i in range(0, 12):
 #Button(master, text="", command=increment(spot)).grid(row = 11, column = 7, columnspan = 9)
 
 _thread.start_new_thread( CheckValid, ("Thread-2", 1, ) )
+_thread.start_new_thread( RunCountdown, ("Thread-3", 1, ) )
 
 
 
