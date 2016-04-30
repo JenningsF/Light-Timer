@@ -6,10 +6,18 @@ import time
 from PIL import Image, ImageTk
 from datetime import date
 from datetime import timedelta
+from datetime import datetime
+import pygame 
 
-timeDiff = date.today()
+timeDiff = datetime.today()
+FinalDate = datetime(2015, 1,1)
+timeDiff = timedelta(0,0,0,0,0,0,0)
+submitCount = 0
+musicPlaying = False
 
 def submit():
+	global submitCount
+	submitCount = submitCount +1
 	sDay = Start_Day.get()
 	sMonth = Start_Month.get()
 	sYear = Start_Year.get()
@@ -17,6 +25,8 @@ def submit():
 	eMonth = End_Month.get()
 	eYear = End_Year.get()
 	InitialDate = date(int(sYear), int(sMonth), int(sDay) )
+	global FinalDate
+	global timeDiff
 	FinalDate = date(int(eYear), int(eMonth), int(eDay))
 	print ("Starting Date:"),
 	print (InitialDate)
@@ -24,6 +34,27 @@ def submit():
 	print (FinalDate)
 	timeDiff = FinalDate - InitialDate
 	print (timeDiff)
+	if submitCount == 1:
+		_thread.start_new_thread( RunCountdown, ("Counter", 1, ) )
+
+def lights():
+        print ("Lights Button Pressed")
+
+def play():
+        print ("Music Button Pressed")
+        global musicPlaying
+        if musicPlaying == False:
+                musicPlaying = True
+                pygame.mixer.init()
+                pygame.mixer.music.load("music/classicman.wav")
+                pygame.mixer.music.play()
+                pygame.mixer.music.get_busy()
+                return
+        if musicPlaying == True:
+                musicPlaying = False
+                pygame.mixer.quit()
+                return
+
 
 def press_up1(event):
 	num = Start_Day.get()
@@ -155,18 +186,20 @@ def CheckValid( threadName, delay):
 
 def RunCountdown(threadName, delay):
 	OneSec = timedelta(days=0, hours=0, minutes=0, seconds=1, microseconds=0)
+	global FinalDate
+	global timeDiff
 	while True:
-		CountDownTime = timeDiff - OneSec
-		print (CountDownTime.strftime("%Y-%m-%d %H:%M:%S"))
+		Label(master, justify = CENTER, text=timeDiff-OneSec).grid(row = 3, column = 10)
+		timeDiff = timeDiff - OneSec
 		time.sleep(1)
 
-	
+
 
 #Setting up Window
 master = Tk()
 master.geometry("480x320")
 
-Label(master, justify = CENTER, text="Start Date").grid(row = 0, column = 0, columnspan = 3)
+Label(master, justify = CENTER, text="Start Date").grid(row = 0, column = 0, columnspan = 7)
 
 #Creating Labels 
 Label(master, justify = CENTER, text="Day").grid(row = 2, column = 0)
@@ -229,7 +262,7 @@ minus3.bind("<Button-1>", press_minus3)
 
 
 
-#Label(master, justify = CENTER, text="End Date").grid(row = 8, column = 0, columnspan = 3)
+Label(master, justify = CENTER, text="End Date").grid(row = 5, column = 0, columnspan = 7)
 
 #Creating the Labels
 #Label(master, justify = CENTER, text="Month").grid(row = 10, column = 0)
@@ -288,10 +321,12 @@ minus6.grid(row = 7, column = 7, columnspan = 2)
 minus6.bind("<Button-1>", press_minus6)
 
 
+Button(master, text = "Submit", justify = CENTER, command = submit, width = 43).grid(row = 8, column = 0,  columnspan = 9)
+
+'''
+
 Label(master, text="Days Remaining").grid(row = 2, column = 8, columnspan = 8)
 
-
-Button(master, text = "Submit", command = submit).grid(row = 13, column = 0, columnspan = 3)
 
 #Creating the checkButtons for Music play hours
 for i in range(0, 12):
@@ -302,7 +337,18 @@ for i in range(0, 12):
 		Label(master, justify = CENTER, text=str(12)).grid(row = 8, column = i)
 	else:
 		Label(master, justify = CENTER, text=str(i)).grid(row = 8, column = i)
+'''
 
+
+photo_lights = PhotoImage(file = "images/lights.gif")
+lights = Button(master, image = photo_lights, command = lights )#command = increment(spot))
+lights.grid(row = 3, column = 10, columnspan = 3, rowspan = 5)
+lights.bind("<Button-1>", photo_lights)
+
+photo_play = PhotoImage(file = "images/play.gif")
+play = Button(master, image = photo_play, command = play )#command = increment(spot))
+play.grid(row = 6, column = 10, columnspan = 3, rowspan = 5)
+play.bind("<Button-1>", photo_lights)
 
 
 
@@ -310,7 +356,12 @@ for i in range(0, 12):
 #Button(master, text="", command=increment(spot)).grid(row = 11, column = 7, columnspan = 9)
 
 _thread.start_new_thread( CheckValid, ("Thread-2", 1, ) )
-_thread.start_new_thread( RunCountdown, ("Thread-3", 1, ) )
+
+
+
+
+#Button(master, text = "Lights", justify = CENTER, command = lights, width = 10,  height = 10 ).grid(row = 4, column = 10,  columnspan = 9)
+#Button(master, text = "Music", justify = CENTER, command = music, width = 10).grid(row = 8, column = 0,  columnspan = 9)
 
 
 
