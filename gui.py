@@ -3,7 +3,7 @@
 from tkinter import *
 import _thread
 import time
-from PIL import Image, ImageTk
+from PIL import Image #, ImageTk
 from datetime import date
 from datetime import timedelta
 from datetime import datetime
